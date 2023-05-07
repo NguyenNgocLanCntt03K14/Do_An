@@ -1,0 +1,42 @@
+version: '3.0'
+services: 
+    weblinhkien: 
+        build: 
+            context: .
+            dockerfile: Dockerfile
+        container_name: weblinhkien
+        image: php74-dev
+        volumes: 
+            - ./src:/var/www/html
+            - ./config/php/etc/apache2/apache2.conf:/etc/apache2/apache2.conf
+            - ./config/php/etc/apache2/sites-available/000-default.conf:/etc/apache2/sites-available/000-default.conf
+        ports: 
+            - 9696:80
+        networks:
+            weblinhkien-nw:
+                aliases:
+                    - weblinhkien.localhost.com
+
+    weblinhkien-nw-db: 
+        image: mysql:5.7
+        volumes:
+            - mysql-data:/var/lib/mysql
+            - ./db:/backup
+        environment:
+            MYSQL_ROOT_PASSWORD: "qdtjozdvhm1@"
+            MYSQL_PASSWORD: "20akaksdf29adfjaksdf__@"
+            MYSQL_USER: "admin"
+            MYSQL_DATABASE: websitelinhkien
+        ports: 
+            - "3636:3306"
+        networks:
+            weblinhkien-nw:
+                aliases:
+                    - weblinhkien-nw-db
+        container_name: "weblinhkien-nw-db"
+
+volumes:
+    mysql-data:
+
+networks:
+    weblinhkien-nw:
